@@ -1,0 +1,4 @@
+{
+    "jwtPrivateKey": "APP_JWTPRIVATEKEY",
+    "dbPassword": "APP_DBPASSWORD"
+}
