@@ -41,4 +41,11 @@ router.post('/newUser', async(req,res)=> {
    
 });
 
+router.delete('/deleteUser/:id', async(req,res) => {
+    let u= await user.UserData.findByIdAndDelete(req.params.id);
+    if(!u) {return res.status(402).send({message:"User Not Found"})};
+
+    res.send({message:"User Successfully Deleted...."});
+})
+
 module.exports= router;

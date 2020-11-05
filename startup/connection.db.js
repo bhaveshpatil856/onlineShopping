@@ -5,10 +5,3 @@ module.exports = (mongoose) => {
             .then(() => console.log("Database Connected"))
             .catch(error => console.log(`Something went WRONG... ${error.message}`));
 }
-
-
-
-
-
-// git config --global user.email "bhaveshpatil856@gmail.com"
-// git config --global user.name "bhaveshpatil856"
