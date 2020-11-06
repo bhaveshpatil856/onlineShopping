@@ -38,6 +38,37 @@ router.delete('/deleteCategoryById/:id', async(req,res)=>{
     res.send({message: catId.categoryName + " deleted successfull"});
 });
 
+router.get('/pageIndex/:page', async(req,res)=>{
+    let perPage=3;
+    let currentPage= req.params.page || 1;
+    let data=await category.categoryModel.find()
+                                         .select('categoryName')
+                                         .skip((currentPage*perPage)-perPage)
+                                         .limit(perPage);
 
+    let totalcount= await category.categoryModel.find().count();
+    let totalpage= Math.ceil(totalcount/perPage);
+
+    res.send({
+        data: data,
+        perPage: perPage,
+        currentPage: currentPage,
+        totalpage: totalpage
+    });
+})
 
 module.exports= router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
