@@ -6,6 +6,9 @@ let subCategory=require('../schema/subCategoryModel');
 router.post('/addCategory', async(req,res)=> {
     let{error}= await category.validateData(req.body);
     if(error){return res.status(404).send(error.details[0].message)};
+
+    let c= await category.categoryModel.findOne({"categoryName":req.body.categoryName});
+    if(c){return res.status(404).send({message:"category already Present"})};
   
     let cat= new category.categoryModel({
         categoryName: req.body.categoryName,
@@ -27,6 +30,7 @@ router.get('/showCategories', async(req,res)=>{
 
 router.get('/categorybyId/:id', async(req,res)=> {
     let cat=await category.categoryModel.findById(req.params.id);
+    if(!cat){return res.status(400).send({message:"Category Not Found"})};
 
     res.send(cat);
 });
@@ -58,17 +62,3 @@ router.get('/pageIndex/:page', async(req,res)=>{
 })
 
 module.exports= router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

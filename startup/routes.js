@@ -5,6 +5,9 @@ let user= require('../routers/userRegistration');
 let login= require('../routers/userLogin');
 let contact= require('../routers/contacts');
 let category= require('../routers/category');
+let subCategory= require('../routers/subCategory');
+
+
 module.exports = (app) => {
     app.use(morgan('tiny'));
     app.use(express.json());
@@ -13,5 +16,5 @@ module.exports = (app) => {
     app.use('/api/', login);
     app.use('/api/',contact);
     app.use('/api/',category);
-
+    app.use('/api/',subCategory);
 }
