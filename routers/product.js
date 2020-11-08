@@ -116,4 +116,55 @@ router.get('/productPageIndex/:page',async(req,res)=>{
     } 
 });
 
+router.get('/category/:catId/pageIndex/:page', async(req,res)=> {
+    try {
+        let perPage= 2;
+        let currentpage = req.params.page || 1 ;
+        let c= await cat.categoryModel.findById(req.params.catId);
+
+        let data= await product.productModel.find({"category.categoryName": c.categoryName})
+                                            .select("-__v")
+                                            .skip((currentpage*perPage)-perPage)
+                                            .limit(perPage);
+
+        let totalCount= await product.productModel.find({"category.categoryName": c.categoryName}).count();
+        let totalPages= Math.ceil(totalCount/perPage);
+ 
+        res.send({
+            data: data,
+            currentPage: currentpage,
+            totalPages: totalPages
+        });
+    } 
+    catch(error){
+        return res.status(404).send(error.details[0].message);
+    }
+});
+
+router.get('/category/:catId/subCategory/:subCatId/pageIndex/:page', async(req,res)=> {
+    try {
+        let perPage= 2;
+        let currentpage = req.params.page || 1 ;
+        let c= await cat.categoryModel.findById(req.params.catId);
+        let sCat= await subCat.subCatModel.findById(req.params.subCatId);
+
+        let data= await product.productModel.find({"category.categoryName": c.categoryName,"subCategory.name":sCat.name})
+                                            .select("-__v")
+                                            .skip((currentpage*perPage)-perPage)
+                                            .limit(perPage);
+
+        let totalCount= await product.productModel.find({"category.categoryName": c.categoryName,"subCategory.name":sCat.name}).count();
+        let totalPages= Math.ceil(totalCount/perPage);
+ 
+        res.send({
+            data: data,
+            currentPage: currentpage,
+            totalPages: totalPages
+        });
+    } 
+    catch(error){
+        return res.status(404).send(error.details[0].message);
+    }
+});
+
 module.exports= router;
