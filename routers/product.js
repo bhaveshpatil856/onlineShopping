@@ -86,6 +86,7 @@ router.get('/findTodayOffers', async(req,res)=> {
     }
 });
 
+//find Latest Product-------incomplete
 router.get('/findLatestProducts', async(req,res)=> {
     try{
 
