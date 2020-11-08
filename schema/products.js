@@ -6,7 +6,7 @@ const { date } = require('joi');
 
 let productSchema= mongoose.Schema({
     name: {type:String,min:5,max:250,required:true},
-    image: {type:String,min:5,max:250,required:true},
+   // image: {type:String,min:5,max:250,required:true},
     description: {type:String,min:5,max:250,required:true},
     price: {type:Number,required:1,minlenght:1},
     offerPrice: {type:Number,required:1,minlenght:1},
@@ -23,10 +23,10 @@ let productModel= mongoose.model('Product',productSchema);
 function validateDate(error){
     let schema= joi.object({
         name: joi.string().min(5).max(250).required(),
-        image: joi.string().min(5).max(250).required(),
+        // image: joi.string().min(5).max(250).required(),
         description: joi.string().min(5).max(250).required(),
-        price: joi.number().minlenght(1).required(),
-        offerPrice: joi.number().minlenght(1).required(),
+        price: joi.number().min(1).required(),
+        offerPrice: joi.number().min(1).required(),
         isAvailable: joi.boolean().required(),
         isTodayOffer: joi.boolean().required(),
         category: joi.string().required(),
