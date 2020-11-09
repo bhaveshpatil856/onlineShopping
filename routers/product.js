@@ -4,13 +4,16 @@ let product= require('../schema/products');
 let cat= require('../schema/categoryModel');
 let subCat= require('../schema/subCategoryModel')
 
-router.post('/addProduct', async(req,res)=> {
+router.post('/addProduct', async(req,res)=> {   
 try{
     let{error}= await product.validateDate(req.body);
     if(error) {return res.status(404).send(error.details[0].message)};
 
     let category= await cat.categoryModel.findById(req.body.category);
+    if(!category){return res.status(404).send({message:"Invalid Category..."})};
+
     let subCategory= await subCat.subCatModel.findById(req.body.subCategory);
+    if(!subCategory){return res.status(404).send({message:"Invalid SubCategory..."})};
 
     let newProduct=new product.productModel({
         name: req.body.name,
@@ -27,7 +30,8 @@ try{
     let data= await newProduct.save();
 
     res.send({data: data})
-}catch(error){
+}
+catch(error){
     return res.status(404).send(error.details[0].message);
 }
 });
@@ -66,6 +70,7 @@ router.delete('/removeProduct/:id', async(req,res)=> {
     }
 });
 
+//Update Product-------incomplete
 router.put('/updateProduct/:id', async(req,res)=> {
     try{
         
@@ -86,9 +91,13 @@ router.get('/findTodayOffers', async(req,res)=> {
     }
 });
 
-//find Latest Product-------incomplete
 router.get('/findLatestProducts', async(req,res)=> {
     try{
+        let data= await product.productModel.find()
+                                            .sort({recordDate:-1})
+                                            .exec();
+
+        res.send(data);
 
     }catch(error){
         return  res.status(404).send(error.details[0].message);

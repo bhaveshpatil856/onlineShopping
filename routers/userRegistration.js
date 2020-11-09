@@ -4,13 +4,17 @@ let bcrypt= require('bcrypt');
 let user= require('../schema/user');
 
 router.get('/allUser', async(req,res) => {
-    let data= await user.UserData.find()
-                                 .select('firstname lastname');
-    res.send({AllUsers: data});
+    try {
+        let data= await user.UserData.find()
+                                     .select('firstname lastname');
+        res.send({AllUsers: data});
+    }
+    catch(error){
+        return res.status(404).send(error.message);
+    }
 });
 
 router.post('/newUser', async(req,res)=> {
-   
     try{
         let{error} = user.validateData(req.body);
         if(error) {return res.status(404).send(error.details[0].message)};
@@ -34,18 +38,21 @@ router.post('/newUser', async(req,res)=> {
 
         res.send({message:"Registration Successfull......."});
     }
-    catch(error)
-    {
-        res.send({error:error.message});
+    catch(error){
+        return res.status(404).send({error: error.message});
     }
-   
 });
 
 router.delete('/deleteUser/:id', async(req,res) => {
-    let u= await user.UserData.findByIdAndDelete(req.params.id);
-    if(!u) {return res.status(402).send({message:"User Not Found"})};
+    try {        
+        let u= await user.UserData.findByIdAndDelete(req.params.id);
+        if(!u) {return res.status(402).send({message:"User Not Found"})};
 
-    res.send({message:"User Successfully Deleted...."});
-})
+        res.send({message:"User Successfully Deleted...."});
+    }
+    catch(error){
+        return res.status(404).send(error.message);
+    }
+});
 
 module.exports= router;
