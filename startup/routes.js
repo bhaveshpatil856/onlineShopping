@@ -8,6 +8,8 @@ let category= require('../routers/category');
 let subCategory= require('../routers/subCategory');
 let product= require('../routers/product');
 let nodemailer= require('../routers/nodemailer');
+let forgetPassword= require('../routers/forgetPasswordMailer');
+let resetPassword=require("../routers/resetPassword");
 
 
 module.exports = (app) => {
@@ -21,4 +23,6 @@ module.exports = (app) => {
     app.use('/api/',subCategory);
     app.use('/api/',product);
     app.use('/api/',nodemailer);
+    app.use('/api/',forgetPassword);
+    app.use("/api/",resetPassword);
 }

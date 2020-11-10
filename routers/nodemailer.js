@@ -4,14 +4,13 @@ let nodemailer= require('nodemailer');
 let crypto= require('crypto');
 let config= require('config');
 let user= require('../schema/user');
-const { getMaxListeners } = require('process');
 
 router.post('/mail',async(req,res)=>{
     try{
         let u= await user.UserData.findOne({"userLogin.userEmail":req.body.userLogin.userEmail});
         if(!u) { return res.status(404).send({message:"Email ID not found"})};
 
-        let transporter= new nodemailer.createTransport({
+        let transporter = new nodemailer.createTransport({
             host:"smtp.gmail.com",
             port: 465,
             secure: true,
