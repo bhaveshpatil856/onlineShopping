@@ -72,13 +72,28 @@ router.delete('/removeProduct/:id', async(req,res)=> {
     }
 });
 
-//Update Product-------incomplete
 router.put('/updateProduct/:id', async(req,res)=> {
     try{
-        
+        let p= await product.productModel.findById(req.params.id);
+        if(!p){return res.status(404).send({message:"product not found"})};
+
+        p.name= req.body.name || p.name,
+        // image: req.body.image,
+        p.description= req.body.description || p.description,
+        p.price= req.body.price || p.price,
+        p.offerPrice= req.body.offerPrice || p.offerPrice,
+        p.isAvailable= req.body.isAvailable || p.isAvailable,
+        p.isTodayOffer= req.body.isTodayOffer || p.isTodayOffer,
+        // p.category= category,
+        // p.subCategory= subCategory
+        p.updateDate= Date.now();
+
+        await p.save();
+        res.send(p);
+
 
     }catch(error){
-        return res.status(404).send(error.details[0].message);
+        return res.status(404).send(error.message);
     }
 });
 

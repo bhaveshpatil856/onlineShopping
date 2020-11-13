@@ -61,9 +61,33 @@ router.post('/cartByUser', async(req,res) => {
 })
 
 router.delete('/removeCartItem/:id', async(req,res) => {
-    let d= await cartItem.userCart.findByIdAndDelete(req.params.id);
-    if(!d){return res.status(404).send({message:"Item not Found..."})};
+    try{
+        let d= await cartItem.userCart.findByIdAndDelete(req.params.id);
+        if(!d){return res.status(404).send({message:"Item not Found..."})};
 
-    res.send({message:"Item deleted Successfully....",data: d});
+        res.send({message:"Item deleted Successfully....",data: d});
+    }
+    catch(error){
+        return res.status(404).send(error.message);
+    }
 });
+
+router.put('/updateCart/:id', async(req,res)=> {
+    try {
+        let cartId= await cartItem.userCart.findById(req.params.id);
+        if(!cartId){return res.status(404).send({message:"item not in cart"})};
+
+        cartId.cartItems.quantity= req.body.quantity,
+        cartId.cartItems.totalPrice = ( cartId.cartItems.price * req.body.quantity )
+        cartId.cartItems.updateDate= Date.now();
+
+        await cartId.save();
+        res.send(cartId);
+
+    }
+    catch(error){
+        return res.status(404).send(error.message);
+    }
+});
+
 module.exports= router;
