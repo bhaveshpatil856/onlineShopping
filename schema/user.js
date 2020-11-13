@@ -1,5 +1,7 @@
-let mongoose= require('mongoose')
-let joi= require('joi')
+let mongoose= require('mongoose');
+let joi= require('joi');
+let jwt= require('jsonwebtoken');
+let config= require('config');
 
 let userSchema= mongoose.Schema({
     firstname:{type:String,required:true,min:5,max:250},
@@ -16,6 +18,13 @@ let userSchema= mongoose.Schema({
     recordDate:{type:Date,default:Date.now},
     updateDate:{type:Date,default:Date.now}
 });
+
+
+userSchema.methods.getUserToken= function() {
+    let token= jwt.sign({_id:this._id,isAdmin: this.isAdmin},config.get('jwtPrivateKey'));
+    return token;    
+}
+
 
 let UserData= mongoose.model('UserData',userSchema);
 

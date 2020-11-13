@@ -10,6 +10,7 @@ let product= require('../routers/product');
 let nodemailer= require('../routers/nodemailer');
 let forgetPassword= require('../routers/forgetPasswordMailer');
 let resetPassword=require("../routers/resetPassword");
+let cart= require('../routers/userCart');
 
 
 module.exports = (app) => {
@@ -25,4 +26,5 @@ module.exports = (app) => {
     app.use('/api/',nodemailer);
     app.use('/api/',forgetPassword);
     app.use("/api/",resetPassword);
+    app.use("/api/",cart);
 }

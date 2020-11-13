@@ -14,6 +14,9 @@ router.post('/userLogin', async(req,res) => {
     
         let pass= await bcrypt.compare(req.body.userLogin.userPassword, email.userLogin.userPassword);
         if(!pass){return res.status(401).send({message:"Invalid Password... Try Again"})};
+        
+        let token= email.getUserToken();
+        console.log(token);
 
         res.send({message:"Login Successfull.... WELCOME"})
     }

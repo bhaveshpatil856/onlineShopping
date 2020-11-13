@@ -3,6 +3,8 @@ let router=express.Router();
 let product= require('../schema/products');
 let cat= require('../schema/categoryModel');
 let subCat= require('../schema/subCategoryModel')
+let Auth= require('../middleware/auth');
+let Admin= require('../middleware/isAdmin');
 
 router.post('/addProduct', async(req,res)=> {   
 try{
