@@ -11,6 +11,7 @@ let userSchema= mongoose.Schema({
         userEmail:{type:String,required:true,unique:true},
         userPassword:{type:String,required:true}
     },
+    address:{type:String,required:true,min:5},
     termsAcceptCheck:{type:Boolean,required:true},
     resetPasswordToken:{type:String},
     resetPasswordExpires:{type:Date},
@@ -37,6 +38,7 @@ function validateData(error){
             userEmail: joi.string().required().email(),
             userPassword: joi.string().required()
         },
+        address: joi.string().min(5).required(),
         termsAcceptCheck: joi.boolean().required().invalid(false)
         // resetPasswordToken: joi.string(),
         // resetPasswordExpires: joi.Date(),

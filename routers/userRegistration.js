@@ -2,6 +2,8 @@ let express= require('express');
 let router= express.Router();
 let bcrypt= require('bcrypt');
 let user= require('../schema/user');
+let Auth= require('../middleware/auth');
+let Admin= require('../middleware/isAdmin');
 
 router.get('/allUser', async(req,res) => {
     try {
@@ -17,7 +19,7 @@ router.get('/allUser', async(req,res) => {
 router.post('/newUser', async(req,res)=> {
     try{
         let{error} = user.validateData(req.body);
-        if(error) {return res.status(404).send(error.details[0].message)};
+        if(error) {return res.status(404).send(error.message)};
 
         let u=await user.UserData.findOne({"userLogin.userEmail":req.body.userLogin.userEmail});
         if(u){return res.status(403).send({message:'User emailId is Already Exist.....'})};
@@ -27,6 +29,7 @@ router.post('/newUser', async(req,res)=> {
             lastname: req.body.lastname,
             newsLetterCheck:  req.body.newsLetterCheck,
             userLogin:req.body.userLogin,
+            address:req.body.address,
             termsAcceptCheck: req.body.termsAcceptCheck
         });
     
@@ -43,7 +46,7 @@ router.post('/newUser', async(req,res)=> {
     }
 });
 
-router.delete('/deleteUser/:id', async(req,res) => {
+router.delete('/deleteUser/:id',[Auth,Admin], async(req,res) => {
     try {        
         let u= await user.UserData.findByIdAndDelete(req.params.id);
         if(!u) {return res.status(402).send({message:"User Not Found"})};

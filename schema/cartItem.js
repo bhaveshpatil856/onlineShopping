@@ -16,6 +16,7 @@ let cartItem= mongoose.model('CartItem',cartItemSchema);
 
 let userCartSchema= mongoose.Schema({
     userEmail: {type:String,required:true,min:5,max:250},
+    address: {type:String,required:true,min:5},
     cartItems: {type: cartItemSchema, required:true}
 });
 

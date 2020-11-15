@@ -11,9 +11,12 @@ let nodemailer= require('../routers/nodemailer');
 let forgetPassword= require('../routers/forgetPasswordMailer');
 let resetPassword=require("../routers/resetPassword");
 let cart= require('../routers/userCart');
+let fileupload= require('../routers/fileupload');
 
 
 module.exports = (app) => {
+
+    app.use('/images', express.static("images"));
     app.use(morgan('tiny'));
     app.use(express.json());
 
@@ -27,4 +30,5 @@ module.exports = (app) => {
     app.use('/api/',forgetPassword);
     app.use("/api/",resetPassword);
     app.use("/api/",cart);
+    app.use('/api/',fileupload);
 }

@@ -3,6 +3,7 @@ let router= express.Router();
 let cartItem = require('../schema/cartItem');
 let product= require('../schema/products');
 let user= require('../schema/user');
+let Auth= require('../middleware/auth');
 
 
 router.post("/addToCart", async(req,res)=>{
@@ -35,6 +36,7 @@ router.post("/addToCart", async(req,res)=>{
         
         let userCart= new cartItem.userCart({
                 userEmail: u.userLogin.userEmail,
+                address: u.address,
                 cartItems: data
             });
 
@@ -49,18 +51,27 @@ router.post("/addToCart", async(req,res)=>{
 });
 
 router.get("/allUserCart", async(req,res) => {
-    let c= await cartItem.userCart.find();
-    res.send(c);
+    try{
+        let c= await cartItem.userCart.find();
+        res.send(c);
+    }catch(error){
+        return res.status(404).send(error.message);
+    }
 });
 
 router.post('/cartByUser', async(req,res) => {
-    let c= await cartItem.userCart.find({"userEmail":req.body.userEmail});
-   // if(c==null){ return res.status(404).send({message:"Empty cart...."})};
+    try{
+        let c= await cartItem.userCart.find({"userEmail":req.body.userEmail});
+        // if(c==null){ return res.status(404).send({message:"Empty cart...."})};
+ 
+        res.send(c); 
+    }
+    catch(error){
+        return res.status(404).send(error.message);
+    }
+});
 
-    res.send(c);
-})
-
-router.delete('/removeCartItem/:id', async(req,res) => {
+router.delete('/removeCartItem/:id', Auth, async(req,res) => {
     try{
         let d= await cartItem.userCart.findByIdAndDelete(req.params.id);
         if(!d){return res.status(404).send({message:"Item not Found..."})};
@@ -83,11 +94,10 @@ router.put('/updateCart/:id', async(req,res)=> {
 
         await cartId.save();
         res.send(cartId);
-
     }
     catch(error){
         return res.status(404).send(error.message);
     }
 });
 
-module.exports= router;
+module.exports = router;
