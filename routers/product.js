@@ -6,12 +6,46 @@ let subCat= require('../schema/subCategoryModel');
 let multer= require('multer');
 let Auth= require('../middleware/auth');
 let Admin= require('../middleware/isAdmin');
-let fileName= require('../routers/fileupload');
 
-router.post('/addProduct',  async(req,res)=> {   
+
+let port="http://localhost:4800";
+
+let storage= multer.diskStorage({
+    destination: function(req,image,cb) {
+        cb(null, './images/');        
+    },
+    filename: function(req,image,cb){
+        cb(null, image.originalname);        
+    }
+});
+
+let fileFilter= function(req,image,cb){
+    if(image.mimetype == "image/jpg" || image.mimetype == "image/png" || image.mimetype == "image/jpeg" || image.mimetype == "image/gif" || image.mimetype == "image/apng")
+    {
+        cb(null,true);
+    }
+    else{
+        cb(null,false);
+    }
+};
+
+let uploads= multer({
+    storage: storage,
+    limits:{
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
+
+
+
+router.post('/addProduct', [Auth,Admin] , uploads.single('image') , async(req,res)=> {   
 try{
     let{error}= await product.validateDate(req.body);
     if(error) {return res.status(404).send(error.details[0].message)};
+
+    let p= await product.productModel.findOne({"name":req.body.name});
+    if(p){ return res.status(404).send({message:"product already present. go to updateProduct to update Product.." })}
 
     let category= await cat.categoryModel.findById(req.body.category);
     if(!category){return res.status(404).send({message:"Invalid Category..."})};
@@ -19,10 +53,11 @@ try{
     let subCategory= await subCat.subCatModel.findById(req.body.subCategory);
     if(!subCategory){return res.status(404).send({message:"Invalid SubCategory..."})};
 
-  
+    // console.log(req.file.filename);
+
     let newProduct=new product.productModel({
         name: req.body.name,
-        // image: req.body.image,
+        image: port + '/images/' + req.file.filename,
         description: req.body.description,
         price: req.body.price,
         quantity: req.body.quantity,
@@ -76,13 +111,13 @@ router.delete('/removeProduct/:id', [Auth,Admin], async(req,res)=> {
     }
 });
 
-router.put('/updateProduct/:id', [Auth,Admin], async(req,res)=> {
+router.put('/updateProduct/:id', [Auth,Admin], uploads.single('image'), async(req,res)=> {
     try{
         let p= await product.productModel.findById(req.params.id);
         if(!p){return res.status(404).send({message:"product not found"})};
 
         p.name= req.body.name || p.name,
-        // image: req.body.image,
+        p.image= port + '/images/' + req.file.filename || p.image,
         p.description= req.body.description || p.description,
         p.price= req.body.price || p.price,
         p.offerPrice= req.body.offerPrice || p.offerPrice,

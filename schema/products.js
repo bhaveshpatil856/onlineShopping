@@ -2,7 +2,6 @@ let mongoose= require('mongoose');
 let joi= require('joi');
 let Category= require('../schema/categoryModel');
 let SubCategory= require('../schema/subCategoryModel');
-const { date } = require('joi');
 
 let productSchema= mongoose.Schema({
     name: {type:String,min:5,max:250,required:true},
@@ -24,7 +23,7 @@ let productModel= mongoose.model('Product',productSchema);
 function validateDate(error){
     let schema= joi.object({
         name: joi.string().min(5).max(250).required(),
-        //image: joi.string().min(5).max(250).required(),
+        // image: joi.string().min(5).max(250).required(),
         description: joi.string().min(5).required(),
         price: joi.number().min(1).required(),
         quantity: joi.number().min(1).required(),
