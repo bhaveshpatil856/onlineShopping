@@ -5,7 +5,6 @@ let product= require('../schema/products');
 let user= require('../schema/user');
 let Auth= require('../middleware/auth');
 
-
 router.post("/addToCart", async(req,res)=>{
     try {
 
@@ -27,7 +26,6 @@ router.post("/addToCart", async(req,res)=>{
         });
 
         // console.log(data);
-
 
         // let a= await data.save();
         // res.send(a);
@@ -83,7 +81,7 @@ router.delete('/removeCartItem/:id', Auth, async(req,res) => {
     }
 });
 
-router.put('/updateCart/:id', async(req,res)=> {
+router.put('/updateCart/:id', Auth , async(req,res)=> {
     try {
         let cartId= await cartItem.userCart.findById(req.params.id);
         if(!cartId){return res.status(404).send({message:"item not in cart"})};

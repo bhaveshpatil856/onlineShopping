@@ -2,6 +2,7 @@ let express= require('express');
 let router= express.Router();
 let bcrypt= require('bcrypt');
 let user= require('../schema/user');
+let welcomeMail= require('../routers/nodemailer');
 let Auth= require('../middleware/auth');
 let Admin= require('../middleware/isAdmin');
 
@@ -38,6 +39,8 @@ router.post('/newUser', async(req,res)=> {
 
         let saveData= await newData.save();
         console.log(saveData);
+
+        await welcomeMail(req,res);
 
         res.send({message:"Registration Successfull......."});
     }
