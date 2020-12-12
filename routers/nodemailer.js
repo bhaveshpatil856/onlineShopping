@@ -91,4 +91,4 @@ async function welcomeMail(req,res){
     }
 }
 
-module.exports= welcomeMail;
+module.exports = welcomeMail;

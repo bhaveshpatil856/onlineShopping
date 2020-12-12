@@ -26,7 +26,7 @@ module.exports = (app) => {
     app.use('/api/',category);
     app.use('/api/',subCategory);
     app.use('/api/',product);
-    app.use('/api/',nodemailer);
+  //  app.use('/api/',nodemailer);
     app.use('/api/',forgetPassword);
     app.use("/api/",resetPassword);
     app.use("/api/",cart);
