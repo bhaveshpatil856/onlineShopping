@@ -5,6 +5,7 @@ let cartItemSchema= mongoose.Schema({
     productId:{type:String,min:3,max:250},
     name:{type:String,min:3,max:250},
     image:{type:String,min:3,max:250},
+    offerPrice:{type:Number,required:true,minlenght:1},
     price:{type:Number,required:true,minlenght:1},
     quantity:{type:Number,required:true,minlenght:1},
     totalPrice:{type:Number,required:true,minlenght:1},
@@ -27,6 +28,7 @@ function validateCartData(error){
         productId: joi.string().min(3).max(250).required(),
         name: joi.string().min(3).max(250).required(),
         image: joi.string().min(3).max(250).required(),
+        offerPrice: joi.number().min(1).required(),
         price: joi.number().min(1).required(),
         quantity: joi.number().min(1).required(),
         totalPrice: joi.number().min(1).required()

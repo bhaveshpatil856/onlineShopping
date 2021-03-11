@@ -7,7 +7,7 @@ let contact= require('../routers/contacts');
 let category= require('../routers/category');
 let subCategory= require('../routers/subCategory');
 let product= require('../routers/product');
-let nodemailer= require('../routers/nodemailer');
+// let nodemailer= require('../routers/nodemailer');
 let forgetPassword= require('../routers/forgetPasswordMailer');
 let resetPassword=require("../routers/resetPassword");
 let cart= require('../routers/userCart');
@@ -30,5 +30,6 @@ module.exports = (app) => {
     app.use('/api/',forgetPassword);
     app.use("/api/",resetPassword);
     app.use("/api/",cart);
+    
    // app.use('/api/',fileupload);
 }

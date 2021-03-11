@@ -3,6 +3,28 @@ let router= express.Router();
 let bcrypt= require("bcrypt");
 let joi=require('joi');
 let user=require('../schema/user');
+const Auth = require('../middleware/auth');
+
+
+
+router.get('/me',Auth, async(req,res) => {
+    
+    // console.log(req.userData._id);
+    
+    try {
+        
+        let u= await user.UserData.findById(req.userData._id).select("-userLogin.userPassword");
+        // console.log(u);
+       // console.log('hi');
+        if(!u){
+            return res.status(403).send({message:"invalid loggedin user"})
+        }
+        res.send({user: u});
+    } 
+    catch(error){
+        return res.status(500).send({message:error.message});
+    }
+});
 
 router.post('/userLogin', async(req,res) => {
     try{
@@ -18,7 +40,12 @@ router.post('/userLogin', async(req,res) => {
         let token= email.getUserToken();
         console.log(token);
 
-        res.send({message:"Login Successfull.... WELCOME"})
+        console.log(email);
+
+        res.header('x-auth-token', token).send({message:"Login Successfull.... WELCOME", token: token});
+    
+        
+
     }
     catch(error){
            return res.status(404).send(error.message);

@@ -32,14 +32,14 @@ let fileFilter= function(req,image,cb){
 let uploads= multer({
     storage: storage,
     limits:{
-        fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5,
     },
     fileFilter: fileFilter
 });
 
 
 
-router.post('/addProduct', [Auth,Admin] , uploads.single('image') , async(req,res)=> {   
+router.post('/addProduct' , uploads.single('image') , async(req,res)=> {   
 try{
     let{error}= await product.validateDate(req.body);
     if(error) {return res.status(404).send(error.details[0].message)};

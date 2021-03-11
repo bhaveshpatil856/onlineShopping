@@ -2,6 +2,7 @@ let mongoose= require('mongoose');
 let joi= require('joi');
 let jwt= require('jsonwebtoken');
 let config= require('config');
+const { string } = require('joi');
 
 let userSchema= mongoose.Schema({
     firstname:{type:String,required:true,min:5,max:250},
@@ -12,10 +13,11 @@ let userSchema= mongoose.Schema({
         userPassword:{type:String,required:true}
     },
     address:{type:String,required:true,min:5},
-    termsAcceptCheck:{type:Boolean,required:true},
+    termsAcceptCheck:{type:Boolean},
     resetPasswordToken:{type:String},
     resetPasswordExpires:{type:Date},
     isAdmin:{type:Boolean},
+    token:{type:String},
     recordDate:{type:Date,default:Date.now},
     updateDate:{type:Date,default:Date.now}
 });
